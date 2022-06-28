@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include <fstream>
 
 /**
 VWAPer v0.1
@@ -80,6 +81,16 @@ public:
 
 int main(int argc, char* argv[])
 {
+    // vector data structures
+    vector <int> Intervals;
+    vector <int> Volumes;
+    vector <float> Highs;
+    vector <float> Lows;
+    char line[256];
+    char Stocks[3012][5];
+
+    int         i = 0;
+
     // check array length before dereferencing
     if (argc <= 1) {
         cout << "Not Enough Arguments\n";
@@ -88,32 +99,22 @@ int main(int argc, char* argv[])
 
     if (!strcmp("version", argv[1]))
     {
-        cerr << "VWAPer version 0.1\n";
+        cout << "VWAPer version 0.1\n";
         return 0;
     }
 
-    FILE* file = fopen(argv[2], "r");
+    FILE* file = fopen(argv[1], "r");
 
-    cout << "Reading file" << argv[2] << "\n";
-
-    // vector data structures
-    vector <int> Intervals, Volumes;
-    vector <float> Highs, Lows;
-    // vector <char> line;
-    // vector < vector<char>> Stocks;
-    char line[256];
-    char Stocks[1000][10];
-
-    int         i = 0;
+    cout << "Reading file " << argv[1] << "\n";
 
     while (fgets(line, 256, file))
     {
-        sscanf(line, "%s %d %d %f %f",
-               Stocks[i], &Intervals[i],
+        scanf(line, "%s %d %d %f %f",
+               &Stocks[i], &Intervals[i],
                &Volumes[i], &Highs[i], &Lows[i]);
         ++i;    // Guarantees that 'i' is incremented.
     }
-
+    
     cout << "Calculating total volumes\n";
 
     map<string, int>TotalVolumes;
@@ -121,7 +122,6 @@ int main(int argc, char* argv[])
     for (int s = 0; s < i; ++s)    // changed 's <= i' to 's < i'
     {
         string stockname = Stocks[s];
-
         for (int j =0; j < i; ++j)     // changed 'j <= i' to 'j < i
         {
             if (!strcmp(Stocks[j], stockname.c_str()))
@@ -176,9 +176,9 @@ int main(int argc, char* argv[])
 5. Check array length before dereferencing in 'FILE* file = fopen(argv[2], "r")' as line will fail if
     user does not give arguments.
 
-5. arrays changed to vectors as this improves memory expansion when need compared to arrays 
+6. arrays changed to vectors as this improves memory expansion when need compared to arrays 
     which have limited memory allocation.
 
-4. code ends with 'return 1' which will be interpreted as an indication that an error was
+7. code ends with 'return 1' which will be interpreted as an indication that an error was
     encountered, therfore the convention is to 'return 0'.
 */
